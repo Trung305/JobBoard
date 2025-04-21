@@ -1,0 +1,648 @@
+```
+task_management_api/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+├── .gitignore
+├── .env.example
+├── config.py
+├── models/
+│   ├── __init__.py
+│   ├── task.py
+├── routes/
+│   ├── __init__.py
+│   ├── task.py
+│   ├── auth.py
+├── migrations/
+│   ├── env.py
+│   ├── script.py.mako
+│   ├── versions/
+```
+
+### File: requirements.txt
+
+```
+Flask==3.0.3
+Flask-RESTful==0.3.10
+Flask-SQLAlchemy==3.1.1
+psycopg2-binary==2.9.9
+mysqlclient==2.2.4
+python-decouple==3.8
+Flask-JWT-Extended==4.6.0
+alembic==1.13.3
+```
+
+### File: README.md
+
+```markdown
+# API Quản lý Công việc (Flask + SQLAlchemy)
+
+Một API RESTful được xây dựng bằng Flask, Flask-RESTful và Flask-SQLAlchemy để quản lý công việc. Dự án sử dụng SQLAlchemy làm ORM, hỗ trợ PostgreSQL và MySQL, phù hợp cho vị trí Fresher Python.
+
+## Tính năng
+- Tạo, đọc, cập nhật và xóa công việc.
+- API RESTful với Flask-RESTful.
+- Cơ sở dữ liệu PostgreSQL hoặc MySQL được quản lý bởi SQLAlchemy.
+- Quản lý schema với Alembic.
+- Xác thực bằng JWT.
+- Quản lý phiên bản với Git.
+- Kiểm thử API với Postman.
+
+## Yêu cầu
+- Python 3.10+
+- PostgreSQL hoặc MySQL
+- Git
+- Postman
+
+## Hướng dẫn cài đặt
+
+1. **Tải mã nguồn**:
+   ```bash
+   git clone <repository-url>
+   cd task_management_api
+```
+
+2. **Tạo môi trường ảo**:
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Trên Windows: venv\Scripts\activate
+   ```
+
+3. **Cài đặt thư viện**:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Cấu hình cơ sở dữ liệu**:
+
+   - **PostgreSQL**: Cài PostgreSQL, tạo database `task_management`.
+   - **MySQL**: Cài MySQL, tạo database `task_management`.
+   - Tạo file `.env` dựa trên `.env.example` và cập nhật `DATABASE_URL`:
+     - PostgreSQL: `DATABASE_URL=postgresql://postgres:your-password@localhost:5432/task_management`
+     - MySQL: `DATABASE_URL=mysql://root:your-password@localhost:3306/task_management`
+
+5. **Khởi tạo và chạy migrations**:
+
+   ```bash
+   alembic init migrations
+   alembic revision horrors-autogenerate -m "Create tasks table"
+   alembic upgrade head
+   ```
+
+6. **Chạy server**:
+
+   ```bash
+   flask run
+   ```
+
+7. **Kiểm thử API**:
+
+   - Mở Postman và nhập file `Task_Management_API.postman_collection.json` (nếu có).
+   - Truy cập các endpoint như `http://localhost:5000/api/tasks` với các phương thức HTTP (GET, POST, PUT, DELETE).
+   - Sử dụng JWT token trong header `Authorization: Bearer <token>`.
+
+## Các endpoint API
+
+| Phương thức | Endpoint | Mô tả |
+| --- | --- | --- |
+| GET | `/api/tasks` | Lấy danh sách công việc |
+| POST | `/api/tasks` | Tạo công việc mới |
+| GET | `/api/tasks/<id>` | Lấy chi tiết công việc theo ID |
+| PUT | `/api/tasks/<id>` | Cập nhật công việc theo ID |
+| DELETE | `/api/tasks/<id>` | Xóa công việc theo ID |
+| POST | `/api/auth/login` | Lấy JWT token |
+
+## Cơ sở dữ liệu
+
+- **SQLAlchemy**: Quản lý schema và truy vấn với PostgreSQL hoặc MySQL.
+- **Alembic**: Quản lý migrations.
+- Schema: Model `Task` với các trường `id`, `title`, `description`, `status`, `created_at`, `updated_at`.
+
+## Quản lý phiên bản
+
+- Khởi tạo với Git:
+
+  ```bash
+  git init
+  git add .
+  git commit -m "Khởi tạo dự án Flask với SQLAlchemy"
+  git remote add origin <repository-url>
+  git push origin main
+  ```
+
+## Kiểm thử với Postman
+
+- Lấy token qua POST `/api/auth/login`:
+
+  ```json
+  {
+      "username": "admin",
+      "password": "password"
+  }
+  ```
+
+- Ví dụ POST `/api/tasks`:
+
+  ```json
+  {
+      "title": "Hoàn thành dự án",
+      "description": "Hoàn thiện API Flask",
+      "status": "Pending"
+  }
+  ```
+
+## Chuyển đổi cơ sở dữ liệu
+
+- Để chuyển từ PostgreSQL sang MySQL:
+  1. Cài `mysqlclient` (`pip install mysqlclient`).
+  2. Cập nhật `.env` với `DATABASE_URL=mysql://root:your-password@localhost:3306/task_management`.
+  3. Chạy lại migrations: `alembic upgrade head`.
+
+## Cải tiến trong tương lai
+
+- Thêm lọc và tìm kiếm công việc theo trạng thái.
+- Thêm phân trang cho danh sách công việc.
+- Tích hợp NoSQL (MongoDB) với PyMongo.
+
+```
+
+### File: config.py
+
+```python
+from decouple import config
+
+class Config:
+    SECRET_KEY = config('SECRET_KEY', default='your-secret-key')
+    SQLALCHEMY_DATABASE_URI = config('DATABASE_URL', default='postgresql://postgres:your-password@localhost:5432/task_management')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JWT_SECRET_KEY = config('JWT_SECRET_KEY', default='your-jwt-secret-key')
+
+# Ghi chú: Để dùng MySQL, cập nhật DATABASE_URL trong .env:
+# DATABASE_URL=mysql://root:your-password@localhost:3306/task_management
+```
+
+### File: app.py
+
+```python
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api
+from flask_jwt_extended import JWTManager
+from config import Config
+from routes.task import TaskResource, TaskListResource
+from routes.auth import LoginResource
+
+app = Flask(__name__)
+app.config.from_object(Config)
+
+db = SQLAlchemy(app)
+api = Api(app)
+jwt = JWTManager(app)
+
+# Đăng ký các resource
+api.add_resource(TaskListResource, '/api/tasks')
+api.add_resource(TaskResource, '/api/tasks/<int:task_id>')
+api.add_resource(LoginResource, '/api/auth/login')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+### File: models/task.py
+
+```python
+from app import db
+from datetime import datetime
+
+class Task(db.Model):
+    __tablename__ = 'tasks'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    status = db.Column(db.String(20), default='Pending')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Task {self.title}>'
+```
+
+### File: routes/task.py
+
+```python
+from flask_restful import Resource, reqparse
+from flask_jwt_extended import jwt_required
+from app import db
+from models.task import Task
+
+parser = reqparse.RequestParser()
+parser.add_argument('title', type=str, required=True, help='Title cannot be blank')
+parser.add_argument('description', type=str)
+parser.add_argument('status', type=str, choices=('Pending', 'Completed', 'Cancelled'), default='Pending')
+
+class TaskResource(Resource):
+    @jwt_required()
+    def get(self, task_id):
+        task = Task.query.get_or_404(task_id)
+        return {
+            'id': task.id,
+            'title': task.title,
+            'description': task.description,
+            'status': task.status,
+            'created_at': task.created_at.isoformat(),
+            'updated_at': task.updated_at.isoformat()
+        }
+
+    @jwt_required()
+    def put(self, task_id):
+        args = parser.parse_args()
+        task = Task.query.get_or_404(task_id)
+        task.title = args['title']
+        task.description = args['description']
+        task.status = args['status']
+        db.session.commit()
+        return {
+            'id': task.id,
+            'title': task.title,
+            'description': task.description,
+            'status': task.status
+        }, 200
+
+    @jwt_required()
+    def delete(self, task_id):
+        task = Task.query.get_or_404(task_id)
+        db.session.delete(task)
+        db.session.commit()
+        return {'message': 'Task deleted'}, 200
+
+class TaskListResource(Resource):
+    @jwt_required()
+    def get(self):
+        tasks = Task.query.all()
+        return [{
+            'id': task.id,
+            'title': task.title,
+            'description': task.description,
+            'status': task.status,
+            'created_at': task.created_at.isoformat(),
+            'updated_at': task.updated_at.isoformat()
+        } for task in tasks]
+
+    @jwt_required()
+    def post(self):
+        args = parser.parse_args()
+        task = Task(
+            title=args['title'],
+            description=args['description'],
+            status=args['status']
+        )
+        db.session.add(task)
+        db.session.commit()
+        return {
+            'id': task.id,
+            'title': task.title,
+            'description': task.description,
+            'status': task.status
+        }, 201
+```
+
+### File: routes/auth.py
+
+```python
+from flask_restful import Resource, reqparse
+from flask_jwt_extended import create_access_token
+
+parser = reqparse.RequestParser()
+parser.add_argument('username', type=str, required=True, help='Username cannot be blank')
+parser.add_argument('password', type=str, required=True, help='Password cannot be blank')
+
+class LoginResource(Resource):
+    def post(self):
+        args = parser.parse_args()
+        # Ví dụ đơn giản, thay bằng kiểm tra với database trong thực tế
+        if args['username'] == 'admin' and args['password'] == 'password':
+            access_token = create_access_token(identity=args['username'])
+            return {'access_token': access_token}, 200
+        return {'message': 'Invalid credentials'}, 401
+```
+
+### File: .gitignore
+
+```
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.env
+*.sqlite3
+migrations/
+```
+
+### File: .env.example
+
+```
+SECRET_KEY=your-secret-key
+DATABASE_URL=postgresql://postgres:your-password@localhost:5432/task_management
+JWT_SECRET_KEY=your-jwt-secret-key
+# Để dùng MySQL:
+# DATABASE_URL=mysql://root:your-password@localhost:3306/task_management
+```
+
+### File: migrations/env.py (tạo bởi Alembic)
+
+```python
+from logging.config import fileConfig
+from sqlalchemy import engine_from_config, pool
+from alembic import context
+from app import db
+from models.task import Task
+
+config = context.config
+fileConfig(config.config_file_name)
+connectable = engine_from_config(
+    config.get_section(config.config_ini_section),
+    prefix="sqlalchemy.",
+    poolclass=pool.NullPool)
+
+with connectable.connect() as connection:
+    context.configure(
+        connection=connection, target_metadata=db.metadata
+    )
+
+    with context.begin_transaction():
+        context.run_migrations()
+```
+
+---
+
+### Hướng dẫn sử dụng và chuyển đổi cơ sở dữ liệu
+
+1. **Khởi tạo dự án**:
+
+   - Cài Python 3.10+ và cơ sở dữ liệu (PostgreSQL hoặc MySQL).
+
+   - Tạo thư mục dự án, khởi tạo Git:
+
+     ```bash
+     mkdir task_management_api
+     cd task_management_api
+     git init
+     ```
+
+   - Tạo môi trường ảo và cài đặt thư viện:
+
+     ```bash
+     python -m venv venv
+     source venv/bin/activate  # Trên Windows: venv\Scripts\activate
+     pip install -r requirements.txt
+     ```
+
+2. **Cấu hình cơ sở dữ liệu**:
+
+   - **PostgreSQL**:
+
+     - Cài PostgreSQL, tạo database `task_management`.
+
+     - Cập nhật `.env`:
+
+       ```
+       DATABASE_URL=postgresql://postgres:your-password@localhost:5432/task_management
+       ```
+
+   - **MySQL**:
+
+     - Cài MySQL, tạo database `task_management`.
+
+     - Cài `mysqlclient`:
+
+       ```bash
+       pip install mysqlclient
+       ```
+
+     - Cập nhật `.env`:
+
+       ```
+       DATABASE_URL=mysql://root:your-password@localhost:3306/task_management
+       ```
+
+3. **Khởi tạo và chạy migrations với Alembic**:
+
+   - Khởi tạo Alembic:
+
+     ```bash
+     alembic init migrations
+     ```
+
+   - Sửa `migrations/env.py` như trong file mẫu ở trên.
+
+   - Tạo migration cho bảng `tasks`:
+
+     ```bash
+     alembic revision --autogenerate -m "Create tasks table"
+     ```
+
+   - Áp dụng migration:
+
+     ```bash
+     alembic upgrade head
+     ```
+
+4. **Chạy server**:
+
+   - Chạy ứng dụng:
+
+     ```bash
+     flask run
+     ```
+
+   - API sẽ chạy tại `http://localhost:5000`.
+
+5. **Kiểm thử với Postman**:
+
+   - Lấy JWT token bằng POST `/api/auth/login`:
+
+     ```json
+     {
+         "username": "admin",
+         "password": "password"
+     }
+     ```
+
+   - Sử dụng token trong header `Authorization: Bearer <token>` để truy cập các endpoint như `/api/tasks`.
+
+   - Ví dụ POST `/api/tasks`:
+
+     ```json
+     {
+         "title": "Hoàn thành dự án",
+         "description": "Hoàn thiện API Flask",
+         "status": "Pending"
+     }
+     ```
+
+6. **Quản lý phiên bản với Git**:
+
+   - Commit thay đổi:
+
+     ```bash
+     git add .
+     git commit -m "Hoàn thiện API với Flask và SQLAlchemy"
+     ```
+
+   - Đẩy lên GitHub:
+
+     ```bash
+     git remote add origin <your-repo-url>
+     git push origin main
+     ```
+
+7. **Triển khai ứng dụng**:
+
+   - Deploy lên Heroku hoặc Render:
+
+     - Cài `gunicorn`:
+
+       ```bash
+       pip install gunicorn
+       ```
+
+     - Tạo `Procfile`:
+
+       ```
+       web: gunicorn app:app
+       ```
+
+     - Cấu hình biến môi trường trên Heroku/Render với `DATABASE_URL`, `SECRET_KEY`, `JWT_SECRET_KEY`.
+
+     - Chạy migration:
+
+       ```bash
+       heroku run alembic upgrade head
+       ```
+
+---
+
+### Mở rộng dự án để thể hiện kỹ năng SQLAlchemy
+
+1. **Thêm tính năng lọc công việc**:
+
+   - Sửa `routes/task.py` để hỗ trợ lọc theo trạng thái:
+
+     ```python
+     from flask import request
+     
+     class TaskListResource(Resource):
+         @jwt_required()
+         def get(self):
+             status = request.args.get('status')
+             tasks = Task.query.filter_by(status=status).all() if status else Task.query.all()
+             return [{
+                 'id': task.id,
+                 'title': task.title,
+                 'description': task.description,
+                 'status': task.status,
+                 'created_at': task.created_at.isoformat(),
+                 'updated_at': task.updated_at.isoformat()
+             } for task in tasks]
+     ```
+
+2. **Thêm phân trang**:
+
+   - Sử dụng SQLAlchemy để phân trang:
+
+     ```python
+     from flask import request
+     
+     class TaskListResource(Resource):
+         @jwt_required()
+         def get(self):
+             page = request.args.get('page', 1, type=int)
+             per_page = request.args.get('per_page', 10, type=int)
+             tasks = Task.query.paginate(page=page, per_page=per_page, error_out=False)
+             return [{
+                 'id': task.id,
+                 'title': task.title,
+                 'description': task.description,
+                 'status': task.status,
+                 'created_at': task.created_at.isoformat(),
+                 'updated_at': task.updated_at.isoformat()
+             } for task in tasks.items]
+     ```
+
+3. **Hỗ trợ NoSQL (MongoDB)**:
+
+   - Nếu muốn thể hiện kỹ năng NoSQL, bạn có thể tích hợp MongoDB với `Flask-PyMongo`:
+
+     - Cài PyMongo:
+
+       ```bash
+       pip install flask-pymongo
+       ```
+
+     - Thêm cấu hình MongoDB trong `config.py`:
+
+       ```python
+       MONGO_URI = config('MONGO_URI', default='mongodb://localhost:27017/task_management')
+       ```
+
+     - Sửa model và route để dùng MongoDB thay vì SQLAlchemy cho một phần dữ liệu (ví dụ: lưu log).
+
+4. **Viết truy vấn SQLAlchemy phức tạp**:
+
+   - Thêm một endpoint để thống kê số lượng công việc theo trạng thái:
+
+     ```python
+     from flask_restful import Resource
+     from sqlalchemy.sql import func
+     
+     class TaskStatsResource(Resource):
+         @jwt_required()
+         def get(self):
+             stats = db.session.query(Task.status, func.count(Task.id)).group_by(Task.status).all()
+             return {status: count for status, count in stats}
+     
+     api.add_resource(taskStatsResource, '/api/tasks/stats')
+     ```
+
+---
+
+### Cách sử dụng dự án để xin việc
+
+- **Đẩy lên GitHub**: Đẩy dự án lên GitHub, thêm link vào CV. Đảm bảo README rõ ràng, có hướng dẫn chuyển đổi giữa PostgreSQL và MySQL.
+- **Tạo Postman Collection**: Xuất collection Postman và thêm vào repository để thể hiện kỹ năng kiểm thử API.
+- **Chuẩn bị phỏng vấn**:
+  - Giải thích cách dùng SQLAlchemy để định nghĩa model `Task` và thực hiện CRUD.
+  - Mô tả cách sử dụng Alembic để quản lý migrations, thể hiện hiểu biết về schema versioning.
+  - Nói về cách chuyển đổi giữa PostgreSQL và MySQL (chỉ cần thay `SQLALCHEMY_DATABASE_URI`).
+  - Nếu hỏi về Django, bạn có thể nói đã nghiên cứu và sẵn sàng học thêm.
+  - Nếu hỏi về NoSQL, đề cập bạn đã tìm hiểu MongoDB và có thể tích hợp với PyMongo.
+- **Thể hiện tư duy logic**: Nhấn mạnh cách xử lý lỗi (kiểm tra input với `reqparse`, trả mã lỗi HTTP) và tối ưu hóa truy vấn SQLAlchemy (ví dụ: dùng `query.get_or_404`).
+
+---
+
+### Giải đáp cụ thể về PostgreSQL trong file
+
+Nếu bạn muốn thay đổi hoàn toàn sang **MySQL** hoặc một cơ sở dữ liệu khác, chỉ cần:
+
+1. Cập nhật `requirements.txt` để bao gồm driver phù hợp (đã có `mysqlclient` trong danh sách trên).
+
+2. Sửa `.env` với `DATABASE_URL` tương ứng:
+
+   - MySQL: `mysql://root:your-password@localhost:3306/task_management`
+   - SQLite (nếu muốn đơn giản): `sqlite:///task_management.db`
+
+3. Chạy lại migrations với Alembic:
+
+   ```bash
+   alembic revision --autogenerate -m "Create tasks table"
+   alembic upgrade head
+   ```
+
+Nếu bạn muốn một dự án với cơ sở dữ liệu cụ thể (như chỉ MySQL hoặc thêm NoSQL), hoặc cần thêm tính năng (như kiểm thử, log), hãy cho tôi biết chi tiết hơn để tôi điều chỉnh dự án!
