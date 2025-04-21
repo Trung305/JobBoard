@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Board</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="container mx-auto p-4 max-w-md">
+        <!-- Đăng nhập -->
+        <div id="login-screen" class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-center">Đăng Nhập</h2>
+            <div class="space-y-4">
+                <input id="login-username" type="text" placeholder="Username" class="w-full p-2 border rounded">
+                <input id="login-password" type="password" placeholder="Password" class="w-full p-2 border rounded">
+                <button onclick="handleLogin()" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Đăng
+                    Nhập</button>
+                <p class="text-center">Chưa có tài khoản? <a href="#" onclick="showScreen('register')"
+                        class="text-blue-500">Đăng Ký</a></p>
+            </div>
+        </div>
+
+        <!-- Đăng ký -->
+        <div id="register-screen" class="bg-white p-6 rounded-lg shadow-lg hidden">
+            <h2 class="text-2xl font-bold mb-4 text-center">Đăng Ký</h2>
+            <div class="space-y-4">
+                <input id="register-username" type="text" placeholder="Username" class="w-full p-2 border rounded">
+                <input id="register-email" type="email" placeholder="Email" class="w-full p-2 border rounded">
+                <input id="register-password" type="password" placeholder="Password" class="w-full p-2 border rounded">
+                <button onclick="handleRegister()"
+                    class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Đăng Ký</button>
+                <p class="text-center">Đã có tài khoản? <a href="#" onclick="showScreen('login')"
+                        class="text-blue-500">Đăng Nhập</a></p>
+            </div>
+        </div>
+
+        <!-- Trang chủ -->
+        <div id="home-screen" class="bg-white p-6 rounded-lg shadow-lg hidden">
+            <h2 class="text-2xl font-bold mb-4 text-center">Chào Mừng đến với Job Board</h2>
+            <p class="text-center mb-4">Xin chào, <span id="user-username">User</span>!</p>
+            <button onclick="handleLogout()" class="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600">Đăng
+                Xuất</button>
+        </div>
+    </div>
+
+    <script type="module" src="/js/index.js"></script>
+</body>
+
+</html>

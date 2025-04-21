@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
+from .views import ApplicationListCreateAPIView
 
 urlpatterns = [
-    path('apply/', views.application_form, name='application_form'),
+    path('application/', ApplicationListCreateAPIView.as_view(), name = 'application-list-create')
 ]
