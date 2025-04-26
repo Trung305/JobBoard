@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Công Việc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Job Board</h1>
+            <div id="auth-links">
+                <button onclick="window.location.href='/index.html'" class="mr-4">Đăng Nhập</button>
+                <button onclick="window.location.href='/index.html'">Đăng Ký</button>
+            </div>
+            <div id="user-menu" class="hidden">
+                <span id="user-username" class="mr-4"></span>
+                <button onclick="handleLogout()">Đăng Xuất</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Job Detail -->
+    <div class="container mx-auto mt-8 p-4">
+        <button onclick="window.location.href='/index.html'"
+            class="mb-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Quay lại</button>
+        <div id="job-detail" class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4">Đang tải...</h2>
+        </div>
+    </div>
+
+    <script src="/static/js/job_detail.js"></script>
+</body>
+
+</html>

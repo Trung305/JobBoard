@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib.staticfiles.views import serve
+from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Đăng nhập
@@ -27,4 +28,6 @@ urlpatterns = [
     path('api/', include('company.urls')),
     path('api/', include('applications.urls')),
     path('', serve, kwargs={'path': 'frontend/index.html'}),
+    path('job_detail.html', TemplateView.as_view(template_name='frontend/job_detail.html'), name='job-detail'),
+    path('login', serve, kwargs={'path': 'frontend/login.html'}),
 ]
