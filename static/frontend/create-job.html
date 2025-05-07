@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Board</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1)),
+                url('https://www.transparenttextures.com/patterns/clean-gray-paper.png');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+    
+        .form-container {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+    
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+    
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        .input-field {
+            transition: all 0.3s ease;
+        }
+    
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    
+        .btn-gradient {
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+    
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+    
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4">
+        <div class="form-container bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Create a New Job</h1>
+            <form id="create-job-form" class="space-y-6">
+                <div class="relative">
+                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+                    <div class="flex items-center">
+                        <svg class="absolute w-5 h-5 text-gray-400 ml-3" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <input type="text" id="title" placeholder="Enter job title" required
+                            class="input-field w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 bg-gray-50">
+                    </div>
+                    <div id="title-error" class="error-message"></div>
+                </div>
+                <div class="relative">
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <div class="flex items-center">
+                        <svg class="absolute w-5 h-5 text-gray-400 ml-3" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                        </svg>
+                        <textarea id="description" placeholder="Enter job description" required
+                            class="input-field w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 bg-gray-50 min-h-[100px]"></textarea>
+                    </div>
+                    <div id="description-error" class="error-message"></div>
+                </div>
+                <div class="relative">
+                    <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <div class="flex items-center">
+                        <svg class="absolute w-5 h-5 text-gray-400 ml-3" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.243l-4.243-4.243m0 0l-4.243 4.243m4.243-4.243l4.243-4.243m-4.243 4.243L9 21m0 0l-4.243-4.243m4.243 4.243L3 12m0 0L9 3m0 0l4.243 4.243M9 3l4.243 4.243">
+                            </path>
+                        </svg>
+                        <input type="text" id="location" placeholder="Enter job location" required
+                            class="input-field w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 bg-gray-50">
+                    </div>
+                    <div id="location-error" class="error-message"></div>
+                </div>
+                <button type="submit" class="btn-gradient w-full text-white py-3 rounded-lg font-semibold shadow-md">
+                    Create Job
+                </button>
+            </form>
+            <p class="text-center text-sm text-gray-600 mt-6">
+                Back to dashboard? <a href="/company_admin" class="text-blue-500 hover:underline">Click here</a>
+            </p>
+        </div>
+    </div>
+    <script src="/static/frontend/js/create-job.js"></script>
+</body>
+
+</html>

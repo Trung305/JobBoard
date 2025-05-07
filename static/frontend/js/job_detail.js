@@ -27,7 +27,7 @@ function handleLogout() {
 
 async function fetchJobDetail(jobId) {
     try {
-        const response = await fetch(`${API_BASE_URL}jobs/${jobId}/`, {
+        const response = await fetch(`${API_BASE_URL}jobs/${jobId}`, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
                 'Content-Type': 'application/json'
@@ -38,19 +38,19 @@ async function fetchJobDetail(jobId) {
             const hasApplied = job.has_applied;
             const jobDetail = document.getElementById('job-detail');
             jobDetail.innerHTML = `
-                   <h2 class="text-2xl font-bold mb-4">${job.title}</h2>
-                   <p class="text-gray-600 mb-2"><strong>Công ty:</strong> ${job.company_name || 'Không xác định'}</p>
-                   <p class="text-gray-600 mb-2"><strong>Địa điểm:</strong> ${job.location}</p>
-                   <p class="text-gray-600 mb-2"><strong>Ngày đăng:</strong> ${new Date(job.created_at).toLocaleDateString()}</p>
-                   <p class="text-gray-600 mb-4"><strong>Mô tả:</strong> ${job.description}</p>
-                   <button 
-                       onclick="${hasApplied ? '' : `showApplyForm(${job.id})`}" 
-                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ${hasApplied ? 'opacity-50 cursor-not-allowed' : ''}" 
-                       ${hasApplied ? 'disabled' : ''}
-                   >
-                       ${hasApplied ? 'Đã Ứng Tuyển' : 'Ứng Tuyển'}
-                   </button>
-               `;
+                <h2 class="text-2xl font-bold mb-4">${job.title}</h2>
+                <p class="text-gray-600 mb-2"><strong>Công ty:</strong> ${job.company_name || 'Không xác định'}</p>
+                <p class="text-gray-600 mb-2"><strong>Địa điểm:</strong> ${job.location}</p>
+                <p class="text-gray-600 mb-2"><strong>Ngày đăng:</strong> ${new Date(job.created_at).toLocaleDateString()}</p>
+                <p class="text-gray-600 mb-4"><strong>Mô tả:</strong> ${job.description}</p>
+                <button 
+                    onclick="${hasApplied ? '' : `showApplyForm(${job.id})`}" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ${hasApplied ? 'opacity-50 cursor-not-allowed' : ''}" 
+                    ${hasApplied ? 'disabled' : ''}
+                >
+                    ${hasApplied ? 'Đã Ứng Tuyển' : 'Ứng Tuyển'}
+                </button>
+            `;
         } else {
             alert('Không thể tải chi tiết công việc.');
         }
@@ -65,46 +65,46 @@ function showApplyForm(jobId) {
     const applyForm = document.createElement('div');
     applyForm.className = 'fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50';
     applyForm.innerHTML = `
-           <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-               <h2 class="text-2xl font-bold mb-4">Ứng Tuyển Công Việc</h2>
-               <form id="apply-form" enctype="multipart/form-data">
-                   <div class="space-y-4">
-                       <div>
-                           <label class="block text-sm font-medium text-gray-700">Công việc</label>
-                           <input type="text" value="Job ID: ${jobId}" class="w-full p-2 border rounded bg-gray-100" readonly>
-                       </div>
-                       <div>
-                           <label class="block text-sm font-medium text-gray-700">Họ và tên</label>
-                           <input id="apply-name" type="text" value="${name}" class="w-full p-2 border rounded bg-gray-100" readonly>
-                       </div>
-                       <div>
-                           <label class="block text-sm font-medium text-gray-700">Email *</label>
-                           <input id="apply-email" type="email" value="${email}" placeholder="Nhập email nếu không có" class="w-full p-2 border rounded" ${email ? 'readonly' : 'required'}>
-                       </div>
-                       <div>
-                           <label class="block text-sm font-medium text-gray-700">Website (tùy chọn)</label>
-                           <input id="apply-website" type="url" placeholder="Website" class="w-full p-2 border rounded">
-                       </div>
-                       <div>
-                           <label class="block text-sm font-medium text-gray-700">Resume (PDF) *</label>
-                           <input id="apply-resume" type="file" accept=".pdf" class="w-full p-2 border rounded" required>
-                       </div>
-                       <div>
-                           <label class="block text-sm font-medium text-gray-700">Thư giới thiệu (tùy chọn)</label>
-                           <textarea id="apply-cover-letter" placeholder="Thư giới thiệu" class="w-full p-2 border rounded"></textarea>
-                       </div>
-                       <div>
-                           <label class="block text-sm font-medium text-gray-700">File thư giới thiệu (tùy chọn, PDF)</label>
-                           <input id="apply-cover-letter-file" type="file" accept=".pdf" class="w-full p-2 border rounded">
-                       </div>
-                       <div class="flex justify-end space-x-2">
-                           <button type="button" onclick="this.closest('.fixed').remove()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Hủy</button>
-                           <button type="submit" onclick="applyJob(${jobId})" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Nộp</button>
-                       </div>
-                   </div>
-               </form>
-           </div>
-       `;
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Ứng Tuyển Công Việc</h2>
+            <form id="apply-form" enctype="multipart/form-data">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Công việc</label>
+                        <input type="text" value="Job ID: ${jobId}" class="w-full p-2 border rounded bg-gray-100" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Họ và tên</label>
+                        <input id="apply-name" type="text" value="${name}" class="w-full p-2 border rounded bg-gray-100" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email *</label>
+                        <input id="apply-email" type="email" value="${email}" placeholder="Nhập email nếu không có" class="w-full p-2 border rounded" ${email ? 'readonly' : 'required'}>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Website (tùy chọn)</label>
+                        <input id="apply-website" type="url" placeholder="Website" class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Resume (PDF) *</label>
+                        <input id="apply-resume" type="file" accept=".pdf" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Thư giới thiệu (tùy chọn)</label>
+                        <textarea id="apply-cover-letter" placeholder="Thư giới thiệu" class="w-full p-2 border rounded"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">File thư giới thiệu (tùy chọn, PDF)</label>
+                        <input id="apply-cover-letter-file" type="file" accept=".pdf" class="w-full p-2 border rounded">
+                    </div>
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" onclick="this.closest('.fixed').remove()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Hủy</button>
+                        <button type="submit" onclick="applyJob(${jobId})" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Nộp</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    `;
     document.body.appendChild(applyForm);
 }
 

@@ -16,6 +16,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 class UserSerializer(serializers.ModelSerializer):
+    groups = serializers.SerializerMethodField()
+    is_staff = serializers.BooleanField(read_only=True)
+    is_superuser = serializers.BooleanField(read_only=True)
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['username', 'email', 'first_name', 'last_name', 'groups', 'is_staff', 'is_superuser']
+        extra_kwargs = {'password': {'write_only': True}}
+    def get_groups(self, obj):
+        return [group.name for group in obj.groups.all()]

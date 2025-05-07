@@ -19,6 +19,7 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib.staticfiles.views import serve
 from django.views.generic import TemplateView
+from jobs.views import JobListCreateAPIView, JobRetrieveAPIView, CompanyAdminView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Đăng nhập
@@ -28,6 +29,11 @@ urlpatterns = [
     path('api/', include('company.urls')),
     path('api/', include('applications.urls')),
     path('', serve, kwargs={'path': 'frontend/index.html'}),
-    path('job_detail.html', TemplateView.as_view(template_name='frontend/job_detail.html'), name='job-detail'),
+    path('index.html', serve, kwargs={'path': 'frontend/index.html'}),
+    path('job_detail.html',serve,  kwargs={'path': 'frontend/job_detail.html'}),
+    path('company_admin',serve,  kwargs={'path': 'frontend/company_admin.html'}),
     path('login', serve, kwargs={'path': 'frontend/login.html'}),
+    path('company_login', serve, kwargs={'path': 'frontend/company_login.html'}),
+    path('company_register', serve, kwargs={'path': 'frontend/company_register.html'}),
+    path('company/create-job', serve, kwargs={'path': 'frontend/create-job.html'}),
 ]

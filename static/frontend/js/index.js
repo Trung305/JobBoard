@@ -3,52 +3,45 @@ const API_BASE_URL = '/api/';
 function showScreen(screenId) {
     window.location.href = window.location.origin
 }
-
-async function handleRegister() {
-    const username = document.getElementById('register-username').value;
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-
-    try {
-        const response = await fetch(API_BASE_URL + 'register/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, email, password })
-        });
-        if (response.ok) {
-            alert('Đăng ký thành công! Vui lòng đăng nhập.');
-            showScreen('login');
-        } else {
-            const error = await response.json();
-            alert('Lỗi: ' + JSON.stringify(error));
-        }
-    } catch (error) {
-        alert('Lỗi: ' + error.message);
-    }
+function showLoginEmp(){
+    window.location.href = window.location.origin
 }
-
-async function handleLogin() {
-    const username = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
-
+async function login(username, password) {
     try {
-        const response = await fetch(API_BASE_URL + 'token/', {
+        const response = await fetch(`${API_BASE_URL}token/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         });
-        if (response.ok) {
-            const data = await response.json();
-            localStorage.setItem('access_token', data.access);
-            localStorage.setItem('email', data.email);
-            document.getElementById('user-username').textContent = username;
-            showScreen('home');
+        if (!response.ok) throw new Error('Login failed');
+        const data = await response.json();
+        localStorage.setItem('access_token', data.access);
+        localStorage.setItem('refresh_token', data.refresh);
+        const isEmployer = await checkUserRole();
+        if (isEmployer) {
+            window.location.href = '/company_admin.html'; // Chuyển hướng Employer
         } else {
-            const error = await response.json();
-            alert('Lỗi: ' + JSON.stringify(error));
+            window.location.href = '/index.html'; // Candidate về trang chủ
         }
     } catch (error) {
-        alert('Lỗi: ' + error.message);
+        console.error('Login error:', error.message);
+        alert('Login failed');
+    }
+}
+
+async function checkUserRole() {
+    try {
+        const response = await fetchWithAuth(`${API_BASE_URL}user/`);
+        if (response.ok) {
+            const user = await response.json();
+            const isEmployer = user.groups.includes('Employers');
+            localStorage.setItem('is_employer', isEmployer);
+            return isEmployer;
+        }
+        return false;
+    } catch (error) {
+        console.error('Error checking role:', error.message);
+        return false;
     }
 }
 
